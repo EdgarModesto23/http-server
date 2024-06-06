@@ -3,10 +3,29 @@
 #include <cstring>
 #include <iostream>
 #include <netdb.h>
+#include <ostream>
+#include <sstream>
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+using namespace std;
+
+void splitString(string &input, char delimiter, string arr[], int &index) {
+  // Creating an input string stream from the input string
+  istringstream stream(input);
+
+  // Temporary string to store each token
+  string token;
+
+  // Read tokens from the string stream separated by the
+  // delimiter
+  while (getline(stream, token, delimiter)) {
+    // Add the token to the subset
+    arr[index++] = token;
+  }
+}
 
 int main(int argc, char **argv) {
   // Flush after every std::cout / std::cerr
@@ -58,7 +77,29 @@ int main(int argc, char **argv) {
     std::cerr << "accept failed\n";
     return 1;
   }
-  const char *msg = "HTTP/1.1 200 OK\r\n\r\n";
+
+  char buffer[1024] = {0};
+  string subset[100];
+  int index = 0;
+  char delimiter = '\n';
+
+  read(new_socket, buffer, 1024);
+  std::cout << "Received: " << buffer << std::endl;
+  string input = buffer;
+  splitString(input, delimiter, subset, index);
+  string path[100];
+  string received = subset[0];
+  char whitespace = ' ';
+  int new_index = 0;
+  splitString(subset[0], whitespace, path, new_index);
+
+  const char *msg;
+
+  if (path[1] == "/") {
+    msg = "HTTP/1.1 200 OK\r\n\r\n";
+  } else {
+    msg = "HTTP/1.1 404 Not Found \r\n\r\n";
+  }
 
   send(new_socket, msg, strlen(msg), 0);
 
