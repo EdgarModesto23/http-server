@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
   if (path[1] == "/") {
     msg = "HTTP/1.1 200 OK\r\n\r\n";
   } else {
-    msg = "HTTP/1.1 404 Not Found \r\n\r\n";
+    msg = "HTTP/1.1 404 Not Found\r\n\r\n";
   }
 
   send(new_socket, msg, strlen(msg), 0);
