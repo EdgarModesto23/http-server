@@ -14,6 +14,7 @@ using namespace std;
 
 void splitString(string &input, char delimiter, string arr[], int &index) {
   // Creating an input string stream from the input string
+
   istringstream stream(input);
 
   // Temporary string to store each token
@@ -69,7 +70,7 @@ int main(int argc, char **argv) {
   struct sockaddr_in client_addr;
   int client_addr_len = sizeof(client_addr);
 
-  std::cout << "Waiting for a client to connect...\n";
+  std::cout << "Waiting for a client to connect on port 4221...\n";
 
   int new_socket = accept(server_fd, (struct sockaddr *)&client_addr,
                           (socklen_t *)&client_addr_len);
@@ -95,7 +96,7 @@ int main(int argc, char **argv) {
 
   const char *msg;
 
-  if (path[1] == "/") {
+  if (path[1] == "/echo/") {
     msg = "HTTP/1.1 200 OK\r\n\r\n";
   } else {
     msg = "HTTP/1.1 404 Not Found\r\n\r\n";
