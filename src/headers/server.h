@@ -1,8 +1,10 @@
 #ifndef SERVER
 #define SERVER
+#include "../cmd/utils.cpp"
 #include <functional>
 #include <iostream>
 #include <map>
+#include <vector>
 
 using namespace std;
 namespace http {
@@ -31,10 +33,12 @@ private:
   string path;
   string body;
   string contentType;
+  map<string, string> urlParams;
 
 public:
   Request();
   ~Request();
+  Request(vector<char> buff);
   void setMethod(string method);
   void setPath(string path);
   void setBody(string body);
@@ -43,6 +47,9 @@ public:
   string getPath();
   string getBody();
   string getContentType();
+  string getUrlParam(string urlParam);
+  void setUrlParam(string urlParam, string value);
+  void setRequest(vector<char> req);
 };
 
 class Server {
@@ -57,12 +64,13 @@ public:
   Server();
   ~Server();
   Server(int port);
-  void listenAndServer();
+  void listenAndServe();
   void registerRoute(string route,
-                     function<void(Response &, Request &)> &callback);
-  void sendResponse();
-  void writeResponse(Response response);
-  void getUrlParam(string urlParam);
+                     function<void(Response &, Request &)> callback);
+  string getUrlParam(string urlParam);
+  Request getRequest();
+  string getPlainRoute(string route);
+  Response getResponse();
 };
 
 } // namespace http
