@@ -46,8 +46,8 @@ void Request::setUrlParam(string urlParam, string value) {
 
 void Request::setRequest(vector<char> req) {
   string request(req.begin(), req.end());
-  vector<string> lines = split(request, "\r\n");
-  vector<string> first_line = split(lines[0], " ");
+  vector<string> lines = utils::split(request, "\r\n");
+  vector<string> first_line = utils::split(lines[0], " ");
   this->path = first_line[0] + " " + first_line[1];
   this->method = first_line[0];
 }

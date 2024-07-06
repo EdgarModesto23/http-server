@@ -1,12 +1,15 @@
 #ifndef SERVER
 #define SERVER
-#include "../cmd/utils.cpp"
 #include <functional>
 #include <iostream>
 #include <map>
 #include <vector>
 
 using namespace std;
+
+namespace utils {
+vector<std::string> split(string str, string token);
+} // namespace utils
 namespace http {
 
 class Response {

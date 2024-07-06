@@ -16,8 +16,8 @@ using namespace http;
 
 bool matchRoute(const string routePath, const string requestPath,
                 http::Request &req) {
-  vector<string> routeParts = split(routePath, "/");
-  vector<string> requestParts = split(requestPath, "/");
+  vector<string> routeParts = utils::split(routePath, "/");
+  vector<string> requestParts = utils::split(requestPath, "/");
   if (routeParts.size() != requestParts.size()) {
     return false;
   }
@@ -47,7 +47,7 @@ bool matchRoute(const string routePath, const string requestPath,
 }
 
 string Server::getPlainRoute(string route) {
-  vector<string> parts = split(route, " ");
+  vector<string> parts = utils::split(route, " ");
   return parts[1];
 }
 

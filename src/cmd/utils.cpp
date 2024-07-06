@@ -1,10 +1,11 @@
+#include "../headers/server.h"
 #include <cstring>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-vector<std::string> split(string str, string token) {
+vector<string> utils::split(string str, string token) {
   vector<string> result;
   while (str.size()) {
     int index = str.find(token);
