@@ -23,6 +23,12 @@ bool matchRoute(const string routePath, const string requestPath,
   }
 
   for (size_t i = 0; i < routeParts.size(); ++i) {
+    if (routeParts[i] != requestParts[i] && routeParts[i][0] != '{') {
+      return false;
+    }
+  }
+
+  for (size_t i = 0; i < routeParts.size(); ++i) {
     for (size_t j = 0; j < routeParts[i].size(); ++j) {
       string param = "";
       if (routeParts[i][j] != '{') {
