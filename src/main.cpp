@@ -6,10 +6,17 @@ using namespace http;
 void callback(Response &res, Request &req) {
   res.setBody(req.getUrlParam("str"));
   res.setContentType("text/plain");
+  res.setStatus("200 OK");
+}
+
+void emptyPath(Response &res, Request &req) {
+  res.setContentType("text/plain");
+  res.setStatus("200 OK");
 }
 
 int main(int argc, char **argv) {
   Server server = Server(4221);
+  server.registerRoute("GET /", emptyPath);
   server.registerRoute("GET /echo/{str}", callback);
   server.listenAndServe();
 }
