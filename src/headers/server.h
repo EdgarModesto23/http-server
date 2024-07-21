@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SERVER
 #define SERVER
 #include <functional>
@@ -36,6 +37,7 @@ private:
   string path;
   string body;
   string contentType;
+  map<string, string> headers;
   map<string, string> urlParams;
 
 public:
@@ -46,6 +48,8 @@ public:
   void setPath(string path);
   void setBody(string body);
   void setContentType(string contentType);
+  void setHeader(string header, string value);
+  string getHeader(string header);
   string getMethod();
   string getPath();
   string getBody();

@@ -33,6 +33,17 @@ void Request::setContentType(string contentType) {
   this->contentType = contentType;
 }
 
+void Request::setHeader(string header, string value) {
+  this->headers[header] = value;
+}
+
+string Request::getHeader(string header) {
+  if (this->headers.find(header) != this->headers.end()) {
+    return this->headers[header];
+  }
+  return "";
+}
+
 string Request::getUrlParam(string urlParam) {
   if (this->urlParams.find(urlParam) != this->urlParams.end()) {
     return this->urlParams[urlParam];
@@ -50,4 +61,10 @@ void Request::setRequest(vector<char> req) {
   vector<string> first_line = utils::split(lines[0], " ");
   this->path = first_line[0] + " " + first_line[1];
   this->method = first_line[0];
+  for (size_t i = 1; i < lines.size(); ++i) {
+    vector<string> header = utils::split(lines[i], ": ");
+    if (header.size() == 2) {
+      this->setHeader(header[0], header[1]);
+    }
+  }
 }
