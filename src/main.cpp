@@ -40,17 +40,33 @@ void getFile(Response &res, Request &req) {
   res.setStatus("200 OK");
 }
 
+void postFile(Response &res, Request &req) {
+  cout << req.getBody() << endl;
+  string path = req.getUrlParam("path");
+  ofstream file(DIR + path);
+  if (!file.is_open()) {
+    res.setBody("");
+    res.setStatus("404 Not Found");
+    return;
+  }
+  file << req.getBody();
+  file.close();
+  res.setBody("File saved");
+  res.setContentType("text/plain");
+  res.setStatus("201 Created");
+}
+
 int main(int argc, char **argv) {
   if (argc == 3 && strcmp(argv[1], "--directory") == 0) {
     DIR = argv[2];
   } else {
     DIR = "./";
   }
-  cout << "Serving files from " << DIR << endl;
   Server server = Server(4221);
   server.registerRoute("GET /", emptyPath);
   server.registerRoute("GET /echo/{str}", callback);
   server.registerRoute("GET /user-agent", readHeader);
   server.registerRoute("GET /files/{path}", getFile);
+  server.registerRoute("POST /files/{path}", postFile);
   server.listenAndServe();
 }

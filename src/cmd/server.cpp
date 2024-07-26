@@ -17,12 +17,12 @@ using namespace http;
 
 bool matchRoute(const string routePath, const string requestPath,
                 http::Request &req) {
+  string method = utils::split(routePath, " ")[0];
   vector<string> routeParts = utils::split(routePath, "/");
   vector<string> requestParts = utils::split(requestPath, "/");
   if (routeParts.size() != requestParts.size()) {
     return false;
   }
-
   for (size_t i = 0; i < routeParts.size(); ++i) {
     if (routeParts[i] != requestParts[i] && routeParts[i][0] != '{') {
       return false;
@@ -126,13 +126,11 @@ void Server::listenAndServe() {
   std::cout << "Listening on port " << this->port << "\n";
 
   while (true) {
-    cout << "Waiting for connection\n";
     int client_fd = accept(this->server_fd, NULL, NULL);
     if (client_fd < 0) {
       std::cerr << "Failed to accept connection\n";
       return;
     }
-    cout << "Connection accepted\n";
     std::thread([this, client_fd]() {
       char buffer[1024] = {0};
       read(client_fd, buffer, 1024);
@@ -143,8 +141,7 @@ void Server::listenAndServe() {
 
       string path = this->request.getPath();
       for (auto route : this->routes) {
-        if (matchRoute(this->getPlainRoute(route.first),
-                       this->getPlainRoute(path), this->request)) {
+        if (matchRoute(route.first, path, this->request)) {
           route.second(this->response, this->request);
           break;
         } else {

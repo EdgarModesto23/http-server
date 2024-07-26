@@ -67,4 +67,5 @@ void Request::setRequest(vector<char> req) {
       this->setHeader(header[0], header[1]);
     }
   }
+  this->body = lines[lines.size() - 1];
 }
