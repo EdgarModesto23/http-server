@@ -8,6 +8,7 @@
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <thread>
 #include <unistd.h>
 #include <vector>
 
@@ -46,7 +47,6 @@ bool matchRoute(const string routePath, const string requestPath,
         }
         req.setUrlParam(param, requestParts[i]);
       }
-      cout << req.getUrlParam(param) << endl;
     }
   }
   return true;
@@ -131,28 +131,29 @@ void Server::listenAndServe() {
       std::cerr << "Failed to accept connection\n";
       return;
     }
+    std::thread([this, client_fd]() {
+      char buffer[1024] = {0};
+      read(client_fd, buffer, 1024);
+      vector<char> req(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
 
-    char buffer[1024] = {0};
-    read(client_fd, buffer, 1024);
-    vector<char> req(buffer, buffer + sizeof(buffer) / sizeof(buffer[0]));
+      this->request.setRequest(req);
+      this->response = http::Response();
 
-    this->request.setRequest(req);
-    this->response = http::Response();
-
-    string path = this->request.getPath();
-    for (auto route : this->routes) {
-      if (matchRoute(this->getPlainRoute(route.first),
-                     this->getPlainRoute(path), this->request)) {
-        route.second(this->response, this->request);
-        break;
-      } else {
-        this->response.setStatus("404 Not Found");
-        this->response.setBody("Route not found");
+      string path = this->request.getPath();
+      for (auto route : this->routes) {
+        if (matchRoute(this->getPlainRoute(route.first),
+                       this->getPlainRoute(path), this->request)) {
+          route.second(this->response, this->request);
+          break;
+        } else {
+          this->response.setStatus("404 Not Found");
+          this->response.setBody("Route not found");
+        }
       }
-    }
 
-    string response = this->response.toCRLF();
-    send(client_fd, response.c_str(), response.length(), 0);
-    close(client_fd);
+      string response = this->response.toCRLF();
+      send(client_fd, response.c_str(), response.length(), 0);
+      close(client_fd);
+    }).detach();
   }
 }
