@@ -43,7 +43,10 @@ void getFile(Response &res, Request &req) {
 int main(int argc, char **argv) {
   if (argc == 3 && strcmp(argv[1], "--directory") == 0) {
     DIR = argv[2];
+  } else {
+    DIR = "./";
   }
+  cout << "Serving files from " << DIR << endl;
   Server server = Server(4221);
   server.registerRoute("GET /", emptyPath);
   server.registerRoute("GET /echo/{str}", callback);

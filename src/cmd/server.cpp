@@ -126,11 +126,13 @@ void Server::listenAndServe() {
   std::cout << "Listening on port " << this->port << "\n";
 
   while (true) {
+    cout << "Waiting for connection\n";
     int client_fd = accept(this->server_fd, NULL, NULL);
     if (client_fd < 0) {
       std::cerr << "Failed to accept connection\n";
       return;
     }
+    cout << "Connection accepted\n";
     std::thread([this, client_fd]() {
       char buffer[1024] = {0};
       read(client_fd, buffer, 1024);
