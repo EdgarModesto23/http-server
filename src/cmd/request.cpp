@@ -1,4 +1,5 @@
 #include "../headers/server.h"
+#include <ostream>
 #include <vector>
 
 using namespace http;
@@ -58,14 +59,19 @@ void Request::setUrlParam(string urlParam, string value) {
 void Request::setRequest(vector<char> req) {
   string request(req.begin(), req.end());
   vector<string> lines = utils::split(request, "\r\n");
+  string body = utils::split(request, "\r\n\r\n")[1];
   vector<string> first_line = utils::split(lines[0], " ");
   this->path = first_line[0] + " " + first_line[1];
   this->method = first_line[0];
-  for (size_t i = 1; i < lines.size(); ++i) {
-    vector<string> header = utils::split(lines[i], ": ");
-    if (header.size() == 2) {
+  for (size_t i = 0; i < lines.size(); ++i) {
+    vector<string> header = utils::split(lines[i], ":");
+    if (header.size() > 1) {
       this->setHeader(header[0], header[1]);
     }
   }
-  this->body = lines[lines.size() - 1];
+  if (body.length() > 0 && this->getHeader("Content-Length") != "") {
+    int content_length = stoi(this->getHeader("Content-Length"));
+    body = body.substr(0, content_length);
+    this->setBody(body);
+  }
 }

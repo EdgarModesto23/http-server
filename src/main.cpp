@@ -19,7 +19,7 @@ void emptyPath(Response &res, Request &req) {
 }
 
 void readHeader(Response &res, Request &req) {
-  res.setBody(req.getHeader("User-Agent"));
+  res.setBody(req.getHeader("User-Agent").substr(1));
   res.setContentType("text/plain");
   res.setStatus("200 OK");
 }
@@ -41,8 +41,8 @@ void getFile(Response &res, Request &req) {
 }
 
 void postFile(Response &res, Request &req) {
-  cout << req.getBody() << endl;
   string path = req.getUrlParam("path");
+  cout << "Content-length function: " + req.getHeader("Content-Length") << endl;
   ofstream file(DIR + path);
   if (!file.is_open()) {
     res.setBody("");
