@@ -58,7 +58,7 @@ string Server::getPlainRoute(string route) {
 }
 
 Server::Server() {
-  this->port = "8080";
+  this->port = "4221";
   this->server_fd = socket(AF_INET, SOCK_STREAM, 0);
   this->response = http::Response();
   this->request = http::Request();
