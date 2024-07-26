@@ -51,6 +51,6 @@ int main(int argc, char **argv) {
   server.registerRoute("GET /", emptyPath);
   server.registerRoute("GET /echo/{str}", callback);
   server.registerRoute("GET /user-agent", readHeader);
-  server.registerRoute("GET /file/{path}", getFile);
+  server.registerRoute("GET /files/{path}", getFile);
   server.listenAndServe();
 }
