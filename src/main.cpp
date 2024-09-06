@@ -16,7 +16,6 @@ void callback(Response &res, Request &req) {
 }
 
 void emptyPath(Response &res, Request &req) {
-
   res.setContentType("text/plain");
   res.setStatus("200 OK");
 }

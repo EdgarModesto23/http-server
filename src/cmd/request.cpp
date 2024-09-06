@@ -1,5 +1,4 @@
 #include "../headers/server.h"
-#include <ostream>
 #include <vector>
 
 using namespace http;

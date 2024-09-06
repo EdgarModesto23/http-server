@@ -4,13 +4,12 @@
 #include <cstring>
 #include <iostream>
 #include <netdb.h>
-#include <ostream>
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <thread>
 #include <unistd.h>
-#include <vector>
+#include <zlib.h>
 
 using namespace std;
 using namespace http;
@@ -168,8 +167,15 @@ void Server::listenAndServe() {
           this->response.setBody("Route not found");
         }
       }
+      string response;
 
-      string response = this->response.toCRLF();
+      if (this->response.getHeader("Content-Encoding") == "gzip") {
+        string body{this->response.getBody()};
+        this->response.setBody(this->response.CompressData(body));
+      }
+
+      response = this->response.toCRLF();
+
       send(client_fd, response.c_str(), response.length(), 0);
       close(client_fd);
     }).detach();

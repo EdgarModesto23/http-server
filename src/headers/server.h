@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <zlib.h>
 
 using namespace std;
 
@@ -27,7 +28,8 @@ public:
   void setBody(string body);
   void setContentType(string contentType);
   void setHeader(string header, string value);
-
+  string getHeader(string key);
+  string CompressData(string &data);
   string getStatus();
   string getBody();
   string getContentType();
