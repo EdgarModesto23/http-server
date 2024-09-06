@@ -1,6 +1,8 @@
 #include "./headers/server.h"
 #include <cstring>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 using namespace std;
 using namespace http;
@@ -14,12 +16,13 @@ void callback(Response &res, Request &req) {
 }
 
 void emptyPath(Response &res, Request &req) {
+
   res.setContentType("text/plain");
   res.setStatus("200 OK");
 }
 
 void readHeader(Response &res, Request &req) {
-  res.setBody(req.getHeader("User-Agent").substr(1));
+  res.setBody(req.getHeader("User-Agent").substr(0));
   res.setContentType("text/plain");
   res.setStatus("200 OK");
 }

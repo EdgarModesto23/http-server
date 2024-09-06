@@ -18,6 +18,7 @@ private:
   string status;
   string body;
   string contentType;
+  map<string, string> headers;
 
 public:
   Response();
@@ -25,10 +26,13 @@ public:
   void setStatus(string status);
   void setBody(string body);
   void setContentType(string contentType);
+  void setHeader(string header, string value);
+
   string getStatus();
   string getBody();
   string getContentType();
   string toCRLF();
+  string HeadersToString();
 };
 
 class Request {

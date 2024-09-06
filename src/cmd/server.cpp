@@ -143,6 +143,10 @@ void Server::listenAndServe() {
       for (auto route : this->routes) {
         if (matchRoute(route.first, path, this->request)) {
           route.second(this->response, this->request);
+          string encoding{this->request.getHeader("Accept-Encoding")};
+          if (encoding == "gzip") {
+            this->response.setHeader("Content-Encoding", "gzip");
+          }
           break;
         } else {
           this->response.setStatus("404 Not Found");

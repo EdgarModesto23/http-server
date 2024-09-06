@@ -64,7 +64,7 @@ void Request::setRequest(vector<char> req) {
   this->path = first_line[0] + " " + first_line[1];
   this->method = first_line[0];
   for (size_t i = 0; i < lines.size(); ++i) {
-    vector<string> header = utils::split(lines[i], ":");
+    vector<string> header = utils::split(lines[i], ": ");
     if (header.size() > 1) {
       this->setHeader(header[0], header[1]);
     }
