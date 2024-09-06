@@ -82,6 +82,7 @@ public:
   Request getRequest();
   string getPlainRoute(string route);
   Response getResponse();
+  void getClientEncoding();
 };
 
 } // namespace http

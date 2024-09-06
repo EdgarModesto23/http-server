@@ -95,6 +95,23 @@ string Server::getUrlParam(string url) {
   return param;
 }
 
+void Server::getClientEncoding() {
+  string headers{this->getRequest().getHeader("Accept-Encoding")};
+  if (headers.size() == 4 && headers == "gzip") {
+    this->response.setHeader("Content-Encoding", "gzip");
+    return;
+  }
+
+  vector<string> hsplit{utils::split(headers, ", ")};
+
+  for (auto h : hsplit) {
+    if (h == "gzip") {
+      this->response.setHeader("Content-Encoding", "gzip");
+      return;
+    }
+  }
+}
+
 void Server::listenAndServe() {
   if (this->server_fd < 0) {
     std::cerr << "Failed to create server socket\n";
@@ -144,9 +161,7 @@ void Server::listenAndServe() {
         if (matchRoute(route.first, path, this->request)) {
           route.second(this->response, this->request);
           string encoding{this->request.getHeader("Accept-Encoding")};
-          if (encoding == "gzip") {
-            this->response.setHeader("Content-Encoding", "gzip");
-          }
+          this->getClientEncoding();
           break;
         } else {
           this->response.setStatus("404 Not Found");
